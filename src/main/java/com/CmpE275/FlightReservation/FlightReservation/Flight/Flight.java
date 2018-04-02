@@ -76,19 +76,19 @@ public class Flight {
         this.price = price;
     }
 
-    public String getFrom() {
+    public String getFromPlace() {
         return fromPlace;
     }
 
-    public void setFrom(String from) {
+    public void setFromPlace(String from) {
         this.fromPlace = from;
     }
 
-    public String getTo() {
+    public String getToPlace() {
         return toPlace;
     }
 
-    public void setTo(String to) {
+    public void setToPlace(String to) {
         this.toPlace = to;
     }
 
