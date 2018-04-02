@@ -70,6 +70,7 @@ public class FlightService {
                     "The Flight number is null"),
                     HttpStatus.NOT_FOUND);
         }
+        //To do check for flight capacity
         try {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH");
             Date departureDate = dateFormat.parse(departure);
@@ -80,9 +81,16 @@ public class FlightService {
                         "Departure time is greater than arrivalTime"),
                         HttpStatus.NOT_FOUND);
             }
-            if (flightRepository.findByFlightNumber(flightNumber) != null)
+            if (flightRepository.findByFlightNumber(flightNumber) != null) {
+                Flight f1 = flightRepository.findByFlightNumber(flightNumber);
+                int activeresrevation = f1.getPlane().getCapacity() - f1.getSeatsLeft();
+                if(activeresrevation>capacity)
+                    return new ResponseEntity<>(getErrorMessage("BadRequest", "400",
+                            "Active reservation count for this flight is higher than the target capacity"),
+                            HttpStatus.BAD_REQUEST);
+
                 return modifyFlight(flightNumber, price, from, to, departureDate, arrivalDate, capacity, description, model, manufacturer, manufacturererYear);
-            else return new ResponseEntity<>(getErrorMessage("BadRequest", "404",
+            }else return new ResponseEntity<>(getErrorMessage("BadRequest", "404",
                     "The Flight is null"),
                     HttpStatus.NOT_FOUND);
 
