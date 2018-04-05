@@ -12,7 +12,6 @@ public class Passenger {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int passengerNumber;
-    private String passengerId;
     private String firstname;
     private String lastname;
     private int age;
@@ -25,7 +24,7 @@ public class Passenger {
 
     }
 
-    public Passenger(String firstname, String lastname, int age, String gender, String phone, List<Reservation> reservations) {
+    public Passenger(String firstname, String lastname, int age, String gender, String phone) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.age = age;
@@ -40,14 +39,6 @@ public class Passenger {
 
     public void setPassengerNumber(int passengerNumber) {
         this.passengerNumber = passengerNumber;
-    }
-
-    public String getPassengerId() {
-        return passengerId;
-    }
-
-    public void setPassengerId(String passengerId) {
-        this.passengerId = passengerId;
     }
 
     public String getFirstname() {
