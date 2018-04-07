@@ -24,7 +24,7 @@ public class FlightController {
                                        @RequestParam("capacity") int capacity,
                                        @RequestParam("model") String model,
                                        @RequestParam("manufacturer") String manufacturer,
-                                       @RequestParam("manufacturedYear") int manufacturedYear){
+                                       @RequestParam("year") int manufacturedYear){
 
         System.out.println("--------- addNewFlight ----------");
          return flightService.addNewFlight(flightNumber, price, from, to,

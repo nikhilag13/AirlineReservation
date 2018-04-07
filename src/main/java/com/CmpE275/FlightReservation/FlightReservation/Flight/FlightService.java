@@ -181,7 +181,7 @@ public class FlightService {
     public ResponseEntity<?> getFlightResponse(String flightNumber,Boolean xml){
         Flight flight = flightRepository.findByFlightNumber(flightNumber);
         if(flight!=null){
-            if(xml)
+            if(!xml)
                 return new ResponseEntity<>(convertFlightToJSON(flight).toString(),HttpStatus.OK);
             else {
                 try {
