@@ -48,7 +48,7 @@ public class FlightService {
             if(flightRepository.findByFlightNumber(flightNumber)!=null)
                 return modifyFlight(flightNumber,price,from,to,departureDate,arrivalDate,capacity,description,model,manufacturer,manufacturererYear);
 
-            Plane p =  new Plane(flightNumber,capacity,model,manufacturer,manufacturererYear);
+            Plane p =  new Plane(capacity,model,manufacturer,manufacturererYear);
             Flight flight = new Flight(flightNumber,price,from,to,departureDate,arrivalDate,capacity,description,p,new ArrayList<Passenger>());
             flightRepository.save(flight);
         }catch(Exception e){
@@ -284,7 +284,7 @@ public class FlightService {
         JSONObject res = new JSONObject();
 
         try{
-            res.put("id", ""+p.getPassengerId());
+            res.put("id", ""+p.getPassengerNumber());
             res.put("firstname", ""+p.getFirstname());
             res.put("lastname", ""+p.getLastname());
             res.put("age", ""+p.getAge());

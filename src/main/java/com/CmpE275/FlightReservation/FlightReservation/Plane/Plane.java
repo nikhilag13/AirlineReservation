@@ -6,8 +6,7 @@ import javax.persistence.Id;
 
 @Embeddable
 public class Plane {
-    @Id
-    private String number;
+
     private int capacity;
     private String model;
     private String manufacturer;
@@ -18,21 +17,14 @@ public class Plane {
     }
 
 
-    public Plane(String number, int capacity, String model, String manufacturer, int year) {
-        this.number = number;
+    public Plane( int capacity, String model, String manufacturer, int year) {
+
         this.capacity = capacity;
         this.model = model;
         this.manufacturer = manufacturer;
         this.year = year;
     }
 
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
 
     public int getCapacity() {
         return capacity;
