@@ -1,6 +1,8 @@
 package com.CmpE275.FlightReservation.FlightReservation.Passenger;
 
 
+import com.CmpE275.FlightReservation.FlightReservation.Flight.Flight;
+import com.CmpE275.FlightReservation.FlightReservation.Plane.Plane;
 import com.CmpE275.FlightReservation.FlightReservation.Reservation.Reservation;
 import com.CmpE275.FlightReservation.FlightReservation.Reservation.ReservationRepository;
 import com.CmpE275.FlightReservation.FlightReservation.Reservation.ReservationService;
@@ -144,7 +146,7 @@ public class PassengerService {
     }
 
     public ResponseEntity<?> getPassenger(String id, boolean isJson) throws JSONException {
-        System.out.println("getPassenger()");
+        System.out.println("getPassenger()"+isJson);
         Passenger passenger = passengerRepository.findByPassengerNumber(Integer.parseInt(id));
 
         if(passenger == null){
@@ -152,10 +154,13 @@ public class PassengerService {
                     + id +" does not exist"), HttpStatus.NOT_FOUND);
         }
         else{
-            if(isJson)
-                return  new ResponseEntity<>(convertPassengerToJSON(passenger),HttpStatus.OK);
-            else
+            if(isJson){
+                System.out.println("JSON requested");
+                return  new ResponseEntity<>(ConvertPassengerToJSONString(passenger),HttpStatus.OK);
+            }
+            else{
                 return  new ResponseEntity<>(XML.toString(new JSONObject(convertPassengerToJSON(passenger))),HttpStatus.OK);
+            }
         }
     }
 
@@ -176,4 +181,96 @@ public class PassengerService {
         return passengerJSON;
 
     }
+
+    public String ConvertPassengerToJSONString(Passenger passenger){
+        JSONObject result = new JSONObject();
+        JSONObject fields = new JSONObject();
+        JSONObject reservationsJSON = new JSONObject();
+        JSONObject passengerArray[] = null;
+        try {
+            System.out.println("inside passengerToJSONString() try");
+            result.put("passenger", fields);
+
+            fields.put("id", ""+passenger.getPassengerNumber());
+            fields.put("firstname", passenger.getFirstname());
+            fields.put("lastname", passenger.getLastname());
+            fields.put("age", ""+passenger.getAge());
+            fields.put("gender", passenger.getGender());
+            fields.put("phone", passenger.getPhone());
+
+            int index = 0;
+            List<Reservation> reservations = passenger.getReservations();
+            passengerArray = new JSONObject[reservations.size()];
+            for(Reservation reservation : reservations){
+                passengerArray[index++] = reservationToJSONString(reservation);
+                System.out.println(reservation.getReservationNumber());
+                System.out.println(reservation.getPrice());
+            }
+            reservationsJSON.put("reservation", passengerArray);
+            fields.put("reservations", reservationsJSON);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return result.toString();
+    }
+
+    public JSONObject reservationToJSONString(Reservation reservation){
+
+        JSONObject reservationToJSONString = new JSONObject();
+        JSONObject flightsJSON = new JSONObject();
+        JSONObject reservationArray[] = new JSONObject[reservation.getFlights().size()];
+        int index = 0;
+        double price = 0;
+
+        try {
+            reservationToJSONString.put("orderNumber", ""+reservation.getReservationNumber());
+
+            for(Flight flight : reservation.getFlights()){
+                reservationArray[index++] =  flightToJSONString(flight);
+                price += flight.getPrice();
+            }
+            reservationToJSONString.put("price", ""+price);
+            flightsJSON.put("flight", reservationArray);
+            reservationToJSONString.put("flights", flightsJSON);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return reservationToJSONString;
+    }
+
+    public JSONObject flightToJSONString(Flight flight){
+        JSONObject flightToJSONString = new JSONObject();
+        JSONObject flightJSON = new JSONObject();
+        try {
+            flightToJSONString.put("flight", flightJSON);
+            flightJSON.put("number", flight.getFlightNumber());
+            flightJSON.put("price", ""+flight.getPrice());
+            flightJSON.put("from", flight.getFromPlace());
+            flightJSON.put("to", flight.getFromPlace());
+            flightJSON.put("departureTime", flight.getDepartureTime());
+            flightJSON.put("arrivalTime", flight.getArrivalTime());
+            flightJSON.put("description", flight.getDescription());
+            flightJSON.put("plane", planeToJSONString(flight.getPlane()));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return flightToJSONString;
+    }
+
+
+    public JSONObject planeToJSONString(Plane plane){
+        JSONObject planeJSON = new JSONObject();
+        try {
+            planeJSON.put("capacity", ""+plane.getCapacity());
+            planeJSON.put("model", plane.getModel());
+            planeJSON.put("manufacturer", plane.getManufacturer());
+            planeJSON.put("yearOfManufacture", ""+plane.getYear());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return planeJSON;
+    }
+
 }
