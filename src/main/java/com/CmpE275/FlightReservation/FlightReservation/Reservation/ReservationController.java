@@ -1,6 +1,7 @@
 package com.CmpE275.FlightReservation.FlightReservation.Reservation;
 
 import com.CmpE275.FlightReservation.FlightReservation.Flight.Flight;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class ReservationController {
         return reservationService.deleteReservation(number);
     }
 
-    @RequestMapping(value="/reservation", method=RequestMethod.POST)// Chaged it form Applicatiion_JSON
+    @RequestMapping(value="/reservation", method=RequestMethod.POST)
     public ResponseEntity<?> makeReservation(
             @RequestParam int passengerId,
             @RequestParam("flightLists") List<Flight> flightLists
@@ -35,4 +36,28 @@ public class ReservationController {
         return reservationService.makeReservation(passengerId, flightLists);
     }
 
+    //TODO:Manvitha's code
+
+    @RequestMapping(value="/reservation/", method= RequestMethod.GET)
+    public ResponseEntity<?> searchReservation(
+            @RequestParam int passengerId,
+            @RequestParam String origin,
+            @RequestParam String to,
+            @RequestParam String flightNumber
+    ) throws JSONException {
+
+        return reservationService.searchReservation(passengerId,origin,to,flightNumber);
+    }
+
+    @RequestMapping(value="/reservation/{number}", method=RequestMethod.POST)
+    public ResponseEntity<?> updateReservation(
+            @PathVariable int reservationNumber,
+            @RequestParam("flightsAdded") List<Flight> flightsToAdd,
+            @RequestParam("flightsRemoved") List<Flight> flightsToRemove
+    ) throws JSONException {
+
+        return reservationService.updateReservation(reservationNumber,flightsToAdd, flightsToRemove);
+    }
 }
+
+

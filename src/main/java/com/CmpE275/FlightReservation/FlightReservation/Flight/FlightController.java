@@ -31,7 +31,7 @@ public class FlightController {
                 departureTime, arrivalTime, capacity, description,model,manufacturer,manufacturedYear);
     }
 
-    @RequestMapping(value = "/flight/{flightNumber}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/airline/{flightNumber}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteFlight(@PathVariable String flightNumber){
 
         System.out.println("--------- deleteFlight ----------");
