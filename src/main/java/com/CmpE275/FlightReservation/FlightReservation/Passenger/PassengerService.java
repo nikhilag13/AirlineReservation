@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import javax.xml.ws.Response;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service
@@ -244,14 +246,15 @@ public class PassengerService {
     public JSONObject flightToJSONString(Flight flight){
         JSONObject flightToJSONString = new JSONObject();
         JSONObject flightJSON = new JSONObject();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH");
         try {
             flightToJSONString.put("flight", flightJSON);
             flightJSON.put("number", flight.getFlightNumber());
             flightJSON.put("price", ""+flight.getPrice());
             flightJSON.put("from", flight.getFromPlace());
             flightJSON.put("to", flight.getFromPlace());
-            flightJSON.put("departureTime", flight.getDepartureTime());
-            flightJSON.put("arrivalTime", flight.getArrivalTime());
+            flightJSON.put("departureTime", dateFormat.format(flight.getDepartureTime()));
+            flightJSON.put("arrivalTime", dateFormat.format(flight.getArrivalTime()));
             flightJSON.put("description", flight.getDescription());
             flightJSON.put("plane", planeToJSONString(flight.getPlane()));
         } catch (JSONException e) {
