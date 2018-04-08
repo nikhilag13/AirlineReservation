@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -93,14 +95,15 @@ public class ReservationService {
     public JSONObject convertFlightToJSON(Flight flight){
         JSONObject jsonflight = new JSONObject();
         System.out.println("inside flightToJSONString()");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH");
 
         try {
             jsonflight.put("number", flight.getFlightNumber());
             jsonflight.put("price", ""+flight.getPrice());
             jsonflight.put("from", flight.getFromPlace());
             jsonflight.put("to", flight.getToPlace());
-            jsonflight.put("departureTime", flight.getDepartureTime());
-            jsonflight.put("arrivalTime", flight.getArrivalTime());
+            jsonflight.put("departureTime", dateFormat.format(flight.getDepartureTime()));
+            jsonflight.put("arrivalTime", dateFormat.format(flight.getArrivalTime()));
             jsonflight.put("description", flight.getDescription());
             jsonflight.put("seatsLeft", ""+flight.getSeatsLeft());
             jsonflight.put("plane", convertPlaneToJSON(flight.getPlane()));
