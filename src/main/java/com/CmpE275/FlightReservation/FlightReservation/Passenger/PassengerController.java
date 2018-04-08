@@ -1,5 +1,6 @@
 package com.CmpE275.FlightReservation.FlightReservation.Passenger;
 
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +52,7 @@ public class PassengerController {
     }
 
     @RequestMapping(value="/passenger/{id}", method=RequestMethod.GET, produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<?> getPassenger(@PathVariable String id, @RequestParam(value = "xml", required=false) String xml){
+    public ResponseEntity<?> getPassenger(@PathVariable String id, @RequestParam(value = "xml", required=false) String xml) throws JSONException {
 
         //Checks if the response type to be returned is JSOn or XML
         boolean isJSON = true;
