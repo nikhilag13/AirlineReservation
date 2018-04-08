@@ -52,7 +52,9 @@ public class PassengerController {
     }
 
     @RequestMapping(value="/passenger/{id}", method=RequestMethod.GET, produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<?> getPassenger(@PathVariable String id, @RequestParam(value = "xml", required=false) String xml) throws JSONException {
+    public ResponseEntity<?> getPassenger(
+            @PathVariable String id,
+            @RequestParam(value = "xml", required=false) String xml) throws JSONException {
 
         //Checks if the response type to be returned is JSOn or XML
         boolean isJSON = true;
