@@ -485,7 +485,7 @@ public class ReservationService {
         }
         reservationRepository.save(reservationToBeUpdated);
 
-        //Now add the flights and check for over-lapping time constraints
+        //add the flights and check for over-lapping time constraints
         Reservation reservationToAddFlights = reservationRepository.findByReservationNumber(reservationNumber);
         int passengerId = reservationToAddFlights.getPassenger().getPassengerNumber();
         if(!checkIfFlightTimingsOverlap(flightsToAdd) &&
