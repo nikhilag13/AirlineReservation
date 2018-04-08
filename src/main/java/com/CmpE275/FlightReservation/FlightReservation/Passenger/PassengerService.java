@@ -159,7 +159,8 @@ public class PassengerService {
                 return  new ResponseEntity<>(ConvertPassengerToJSONString(passenger),HttpStatus.OK);
             }
             else{
-                return  new ResponseEntity<>(XML.toString(new JSONObject(convertPassengerToJSON(passenger))),HttpStatus.OK);
+                System.out.println("XML requested");
+                return  new ResponseEntity<>(XML.toString(convertPassengerToJSON(passenger)),HttpStatus.OK);
             }
         }
     }
@@ -173,6 +174,7 @@ public class PassengerService {
             passengerJSON.put("age", ""+passenger.getAge());
             passengerJSON.put("gender", ""+passenger.getGender());
             passengerJSON.put("phone", ""+passenger.getPhone());
+            passengerJSON.put("reservations", ""+passenger.getPhone());
         }catch (Exception e){
             e.printStackTrace();
 
@@ -188,9 +190,8 @@ public class PassengerService {
         JSONObject reservationsJSON = new JSONObject();
         JSONObject passengerArray[] = null;
         try {
-            System.out.println("inside passengerToJSONString() try");
+            System.out.println("inside passengerToJSONString");
             result.put("passenger", fields);
-
             fields.put("id", ""+passenger.getPassengerNumber());
             fields.put("firstname", passenger.getFirstname());
             fields.put("lastname", passenger.getLastname());
