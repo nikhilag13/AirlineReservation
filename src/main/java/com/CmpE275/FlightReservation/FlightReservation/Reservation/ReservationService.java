@@ -48,7 +48,7 @@ public class ReservationService {
             codeandMesaage.put("msg",message);
             errorMessage.put(header,codeandMesaage);
         }catch(Exception e){
-            System.out.println("getErrorMessage method exception");
+            e.printStackTrace();
         }
         return errorMessage.toString();
     }
@@ -216,8 +216,8 @@ public class ReservationService {
             for(int j=i+1;j<flights.size();j++){
                 Date currentFlightDepartureDate=flights.get(i).getDepartureTime();
                 Date currentFlightArrivalDate=flights.get(i).getArrivalTime();
-                Date dep=flights.get(j).getDepartureTime();
-                Date arr=flights.get(j).getArrivalTime();
+                Date dep = flights.get(j).getDepartureTime();
+                Date arr = flights.get(j).getArrivalTime();
                 if((currentFlightArrivalDate.compareTo(dep)>=0 && currentFlightArrivalDate.compareTo(arr)<=0) || (currentFlightDepartureDate.compareTo(dep)>=0 && currentFlightDepartureDate.compareTo(arr)<=0)){
                   result = true;
                   break;
@@ -485,7 +485,7 @@ public class ReservationService {
         }
         reservationRepository.save(reservationToBeUpdated);
 
-        //Now add the flights and check for over-lapping time constraints
+        //add the flights and check for over-lapping time constraints
         Reservation reservationToAddFlights = reservationRepository.findByReservationNumber(reservationNumber);
         int passengerId = reservationToAddFlights.getPassenger().getPassengerNumber();
         if(!checkIfFlightTimingsOverlap(flightsToAdd) &&
