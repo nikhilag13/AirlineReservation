@@ -244,13 +244,14 @@ public class FlightService {
         JSONObject res = new JSONObject();
         JSONObject jsonFlight = new JSONObject();
         JSONObject plane = new JSONObject();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH");
         try{
             jsonFlight.put("flightNumber", f.getFlightNumber());
             jsonFlight.put("price", Double.toString(f.getPrice()));
             jsonFlight.put("from", f.getFromPlace());
             jsonFlight.put("to", f.getToPlace());
-            jsonFlight.put("departureTime", f.getDepartureTime());
-            jsonFlight.put("arrivalTime", f.getArrivalTime());
+            jsonFlight.put("departureTime", dateFormat.format(f.getDepartureTime()));
+            jsonFlight.put("arrivalTime", dateFormat.format(f.getArrivalTime()));
             jsonFlight.put("description", f.getDescription());
             jsonFlight.put("seatsLeft", ""+f.getSeatsLeft());
             Plane p = f.getPlane();
