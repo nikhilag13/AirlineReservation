@@ -22,7 +22,8 @@ import java.util.List;
 @Service
 public class ReservationService {
 
-    @Autowired ReservationRepository reservationRepository;
+    @Autowired
+    ReservationRepository reservationRepository;
 
     @Autowired
     FlightRepository flightRepository;

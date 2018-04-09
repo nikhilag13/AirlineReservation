@@ -41,7 +41,8 @@ public class PassengerController {
     }
 
     @RequestMapping(value="/passenger/{id}", method=RequestMethod.DELETE, produces=MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> deletePassenger(@PathVariable String id) {
+    public ResponseEntity<?> deletePassenger(
+            @PathVariable String id) {
         return passengerService.deletePassenger(id);
     }
 
