@@ -121,6 +121,8 @@ public class FlightService {
                           passengerFlights.add(resF);
 
                   }
+                  f.setDepartureTime(departureDate);
+                  f.setArrivalTime(arrivalDate);
                   Boolean overlap = checkforOverlapTime(passengerFlights,f);
                   if(overlap)
                       return  new ResponseEntity<>(getErrorMessage("BadRequest", "400",
