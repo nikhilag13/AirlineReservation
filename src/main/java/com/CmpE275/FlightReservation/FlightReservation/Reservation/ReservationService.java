@@ -257,10 +257,6 @@ public class ReservationService {
         return result;
     }
 
-
-//TODO:Manvitha's code
-
-    //helper - List<Reservation> reservations, List<Flight> numList, List<Flight> flight, String source
     public void getStuffDone(String ToOrFromPlace, List<Flight> flightsList, List<Flight> newTempList,List<Reservation> reservations ){
 
         for(int flightIndex=0;flightIndex<flightsList.size();flightIndex++){
@@ -474,23 +470,29 @@ public class ReservationService {
     }
 
     public ResponseEntity<?> updateReservation(int reservationNumber,List<Flight> flightsToAdd,List<Flight> flightsToRemove) throws JSONException {
-
+        try{
         //First Remove the FLights
         Reservation reservationToBeUpdated = reservationRepository.findByReservationNumber(reservationNumber);
-
+        System.out.println("Update the reservation");
         if(reservationToBeUpdated == null){
             return  new ResponseEntity<>(getErrorMessage("BadRequest", "404",
                     "Sorry, the requested reservation with number "
                             + reservationNumber + " does not exist"), HttpStatus.NOT_FOUND);
         }
-        for(Flight flight: flightsToRemove){
-            reservationToBeUpdated.getFlights().remove(flight);
+        try {
+            for (Flight flight : flightsToRemove) {
+                reservationToBeUpdated.getFlights().remove(flight);
+            }
+        } catch(Exception e) {
+            return  new ResponseEntity<>(getErrorMessage("BadRequest", "404",
+                    "Sorry, the requested flights does not exist and cannot be updated. Please try with valid flight numbers"), HttpStatus.NOT_FOUND);
         }
         reservationRepository.save(reservationToBeUpdated);
 
         //add the flights and check for over-lapping time constraints
         Reservation reservationToAddFlights = reservationRepository.findByReservationNumber(reservationNumber);
         int passengerId = reservationToAddFlights.getPassenger().getPassengerNumber();
+            System.out.println("Checking the time constraints");
         if(!checkIfFlightTimingsOverlap(flightsToAdd) &&
                 !checkIfPassengerOtherFlightsOverlap(passengerId, flightsToAdd)){
             for(Flight flight:flightsToAdd){
@@ -515,5 +517,10 @@ public class ReservationService {
 
         }
 
+    } catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(XML.toString(new JSONObject(getErrorMessage("BadRequest", "404",
+                    "Sorry, There seems to be some error. Please try again with valid details" ))), HttpStatus.NOT_FOUND);
+        }
     }
 }

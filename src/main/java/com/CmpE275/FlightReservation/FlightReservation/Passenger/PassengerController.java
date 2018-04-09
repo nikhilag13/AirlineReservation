@@ -13,7 +13,7 @@ import javax.transaction.Transactional;
 public class PassengerController {
 
     @Autowired
-    private PassengerService passengerService;
+    public PassengerService passengerService;
 
     @RequestMapping(value="/passenger", method= RequestMethod.POST, produces= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addPassenger(

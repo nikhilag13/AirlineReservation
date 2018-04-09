@@ -51,14 +51,13 @@ public class PassengerService {
             System.out.println("User Details Successfully Saved");
             try {
                 NewPassengerRecord.setPassengerNumber(NewPassengerRecord.getPassengerNumber());
-                returnJSON.put("passenger", innerJSON);
                 innerJSON.put("id", NewPassengerRecord.getPassengerNumber());
+                returnJSON.put("passenger", innerJSON);
                 innerJSON.put("firstname", firstname);
+                innerJSON.put("lastname", lastname);
                 innerJSON.put("age", age);
                 innerJSON.put("gender", gender);
                 innerJSON.put("phone", phone);
-                innerJSON.put("lastname", lastname);
-
                 JSONObject reservations = new JSONObject();
                 JSONObject reservationArray[] = new JSONObject[0];
                 reservations.put("reservation", reservationArray);
@@ -158,35 +157,17 @@ public class PassengerService {
         else{
             if(isJson){
                 System.out.println("JSON requested");
-                return  new ResponseEntity<>(ConvertPassengerToJSONString(passenger),HttpStatus.OK);
+                return  new ResponseEntity<>(ConvertPassengerToJSONString(passenger).toString(),HttpStatus.OK);
             }
             else{
                 System.out.println("XML requested");
-                return  new ResponseEntity<>(XML.toString(convertPassengerToJSON(passenger)),HttpStatus.OK);
+                return  new ResponseEntity<>(XML.toString(ConvertPassengerToJSONString(passenger)),HttpStatus.OK);
             }
         }
     }
 
-    public JSONObject convertPassengerToJSON(Passenger passenger){
-        JSONObject passengerJSON = new JSONObject();
-        try{
-            passengerJSON.put("id", ""+passenger.getPassengerNumber());
-            passengerJSON.put("firstname", ""+passenger.getFirstname());
-            passengerJSON.put("lastname", ""+passenger.getLastname());
-            passengerJSON.put("age", ""+passenger.getAge());
-            passengerJSON.put("gender", ""+passenger.getGender());
-            passengerJSON.put("phone", ""+passenger.getPhone());
-            passengerJSON.put("reservations", ""+passenger.getPhone());
-        }catch (Exception e){
-            e.printStackTrace();
 
-        }
-
-        return passengerJSON;
-
-    }
-
-    public String ConvertPassengerToJSONString(Passenger passenger){
+    public JSONObject ConvertPassengerToJSONString(Passenger passenger){
         JSONObject result = new JSONObject();
         JSONObject fields = new JSONObject();
         JSONObject reservationsJSON = new JSONObject();
@@ -216,7 +197,7 @@ public class PassengerService {
             e.printStackTrace();
         }
 
-        return result.toString();
+        return result;
     }
 
     public JSONObject reservationToJSONString(Reservation reservation){

@@ -16,13 +16,15 @@ public class ReservationController {
     ReservationService reservationService;
 
     @RequestMapping(value="/reservation/{number}", method= RequestMethod.GET)
-    public ResponseEntity<?> getReservation(@PathVariable int number) {
+    public ResponseEntity<?> getReservation(
+            @PathVariable int number) {
 
         return reservationService.getReservation(number);
     }
 
     @RequestMapping(value="/reservation/{number}", method=RequestMethod.DELETE)
-    public ResponseEntity<?> deleteReservation(@PathVariable int number) {
+    public ResponseEntity<?> deleteReservation(
+            @PathVariable int number) {
 
         return reservationService.deleteReservation(number);
     }
@@ -49,7 +51,7 @@ public class ReservationController {
         return reservationService.searchReservation(passengerId,origin,to,flightNumber);
     }
 
-    @RequestMapping(value="/reservation/{number}", method=RequestMethod.POST)
+    @RequestMapping(value="/reservation/{reservationNumber}", method=RequestMethod.POST)
     public ResponseEntity<?> updateReservation(
             @PathVariable int reservationNumber,
             @RequestParam("flightsAdded") List<Flight> flightsToAdd,
