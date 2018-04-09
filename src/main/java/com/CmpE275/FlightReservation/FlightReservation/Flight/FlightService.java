@@ -45,9 +45,12 @@ public class FlightService {
                         HttpStatus.NOT_FOUND);
 
             }
-            if(flightRepository.findByFlightNumber(flightNumber)!=null)
-                return modifyFlight(flightNumber,price,from,to,departureDate,arrivalDate,capacity,description,model,manufacturer,manufacturererYear);
+            if(flightRepository.findByFlightNumber(flightNumber)!=null) {
+                System.out.println("Flight Number already exists - Update Flight");
+                return modifyFlight(flightNumber, price, from, to, departureDate, arrivalDate, capacity, description, model, manufacturer, manufacturererYear);
+            }
 
+            System.out.println("New Flight Received");
             Plane p =  new Plane(capacity,model,manufacturer,manufacturererYear);
             Flight flight = new Flight(flightNumber,price,from,to,departureDate,arrivalDate,capacity,description,p,new ArrayList<Passenger>());
             flightRepository.save(flight);
@@ -104,6 +107,8 @@ public class FlightService {
 
     public ResponseEntity<?> modifyFlight(String flightNumber, int price, String from, String to, Date departureDate,
                                           Date arrivalDate, int capacity, String description, String model, String manufacturer, int manufacturererYear){
+
+       // System.out.println("modify Flight");
       Flight f = flightRepository.findByFlightNumber(flightNumber);
       if(f!=null){
           if(departureDate.compareTo(f.getDepartureTime())!=0 || arrivalDate.compareTo(f.getArrivalTime())!=0){
@@ -124,18 +129,28 @@ public class FlightService {
 
               }
 
-              f.setPrice(price);
-              f.setFromPlace(from);
-              f.setToPlace(to);
-              f.setDepartureTime(departureDate);
-              f.setArrivalTime(arrivalDate);
-              f.setDescription(description);
-              f.getPlane().setCapacity(capacity);
-              f.getPlane().setManufacturer(manufacturer);
-              f.getPlane().setModel(model);
-              f.getPlane().setYear(manufacturererYear);;
-              flightRepository.save(f);
           }
+
+          if(f.getPlane().getCapacity()!= capacity){
+              int passengerCount = f.getPlane().getCapacity() - f.getSeatsLeft();
+              if(passengerCount>capacity)
+                  return  new ResponseEntity<>(getErrorMessage("BadRequest", "400",
+                          "This Flight cannot be updated since requested Capacity is greater than Passenger count"),
+                          HttpStatus.BAD_REQUEST);
+              f.setSeatsLeft(capacity-passengerCount);
+          }
+
+          f.setPrice(price);
+          f.setFromPlace(from);
+          f.setToPlace(to);
+          f.setDepartureTime(departureDate);
+          f.setArrivalTime(arrivalDate);
+          f.setDescription(description);
+          f.getPlane().setCapacity(capacity);
+          f.getPlane().setManufacturer(manufacturer);
+          f.getPlane().setModel(model);
+          f.getPlane().setYear(manufacturererYear);;
+          flightRepository.save(f);
 
          return getFlightResponse(flightNumber,true);
 

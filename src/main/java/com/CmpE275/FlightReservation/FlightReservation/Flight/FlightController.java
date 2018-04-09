@@ -16,7 +16,7 @@ public class FlightController {
     @RequestMapping(value = "/flight/{flightNumber}", method = RequestMethod.POST)
     public ResponseEntity<?> addFlight(@PathVariable String flightNumber,
                                        @RequestParam("price") int price,
-                                       @RequestParam("from") String from,
+                                       @RequestParam("origin") String from,
                                        @RequestParam("to") String to,
                                        @RequestParam("departureTime") String departureTime,
                                        @RequestParam("arrivalTime") String arrivalTime,
@@ -48,7 +48,7 @@ public class FlightController {
     @RequestMapping(value = "/flight/{flightNumber}", method = RequestMethod.PUT)
     public ResponseEntity<?> updateFlight(@PathVariable String flightNumber,
                                        @RequestParam("price") int price,
-                                       @RequestParam("from") String from,
+                                       @RequestParam("origin") String from,
                                        @RequestParam("to") String to,
                                        @RequestParam("departureTime") String departureTime,
                                        @RequestParam("arrivalTime") String arrivalTime,
@@ -56,7 +56,7 @@ public class FlightController {
                                        @RequestParam("capacity") int capacity,
                                        @RequestParam("model") String model,
                                        @RequestParam("manufacturer") String manufacturer,
-                                       @RequestParam("manufacturedYear") int manufacturedYear){
+                                       @RequestParam("year") int manufacturedYear){
 
         System.out.println("--------- updateFlight ----------");
         return flightService.updateFlight(flightNumber, price, from, to,
