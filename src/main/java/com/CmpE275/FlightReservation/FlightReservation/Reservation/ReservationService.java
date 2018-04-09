@@ -70,18 +70,16 @@ public class ReservationService {
             passenger.put("age", ""+reservation.getPassenger().getAge());
             passenger.put("gender", reservation.getPassenger().getGender());
             passenger.put("phone", reservation.getPassenger().getPhone());
-            int i =0;
-            int price=0;
+            int i=0;
             for(Flight flight : reservation.getFlights()){
                 flights_array[i++] =  convertFlightToJSON(flight);
-                price += flight.getPrice();
                 // to be checked
-               // flight.getPassenger().add(passenger);
+                // flight.getPassenger().add(passenger);
             }
 
             flights.put("flight",flights_array);
             res.put("reservationNumber", ""+reservation.getReservationNumber());
-            res.put("price",""+price);
+            res.put("price",""+reservation.getPrice());
             res.put("passenger",passenger);
             res.put("flights",flights);
             result.put("reservation",res);
@@ -173,8 +171,7 @@ public class ReservationService {
                 "The Passenger Other Flight timings overlap"),
                 HttpStatus.BAD_REQUEST);
 
-        Boolean flightSeatsUnAvailable= false
-                ;
+        Boolean flightSeatsUnAvailable= false;
         for(Flight flight : flights){
             if(flight.getSeatsLeft() <= 0)
                 flightSeatsUnAvailable = true;
@@ -186,15 +183,15 @@ public class ReservationService {
                     HttpStatus.BAD_REQUEST);
 
      //add the passenger to the flight
+        double reservationCost = 0;
         for(Flight flight : flights){
             flight.setSeatsLeft(flight.getSeatsLeft()-1);
-        }
-
-        for(Flight flight : flights){
+            reservationCost= reservationCost + flight.getPrice();
             flight.getPassengers().add(passenger);
         }
 
-        Reservation reservation = new Reservation(passenger, 0,flights);
+
+        Reservation reservation = new Reservation(passenger, reservationCost,flights);
         passenger.getReservations().add(reservation);
 
         reservationRepository.save(reservation);
