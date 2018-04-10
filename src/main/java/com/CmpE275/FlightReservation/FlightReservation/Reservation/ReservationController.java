@@ -38,9 +38,8 @@ public class ReservationController {
         return reservationService.makeReservation(passengerId, flightLists);
     }
 
-    //TODO:Manvitha's code
 
-    @RequestMapping(value="/reservation/", method= RequestMethod.GET)
+    @RequestMapping(value="/reservation", method= RequestMethod.GET)
     public ResponseEntity<?> searchReservation(
             @RequestParam int passengerId,
             @RequestParam String origin,

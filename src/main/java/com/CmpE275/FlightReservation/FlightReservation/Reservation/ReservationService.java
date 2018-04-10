@@ -35,7 +35,7 @@ public class ReservationService {
         Reservation reservation = reservationRepository.findByReservationNumber(number);
         if(reservation==null){
             return new ResponseEntity<>(getErrorMessage("BadRequest", "404",
-                    "Reservation does not exist"),
+                    "Reservation with id "+number+ " does not exist"),
                     HttpStatus.NOT_FOUND);
         }else{
             return  new ResponseEntity<>(convertReservationtoJSON(reservation).toString(),HttpStatus.OK);
@@ -157,7 +157,7 @@ public class ReservationService {
         Passenger passenger = passengerRepository.findByPassengerNumber(passengerNumber);
         if(passenger == null)
             return new ResponseEntity<>(getErrorMessage("BadRequest", "400",
-                    "Passenger does not exist"),
+                    "Passenger with id "+passengerNumber +" does not exist"),
                     HttpStatus.BAD_REQUEST);
 
         Boolean flightOverlap = checkIfFlightTimingsOverlap(flights);
@@ -195,7 +195,6 @@ public class ReservationService {
         passenger.getReservations().add(reservation);
 
         reservationRepository.save(reservation);
-        System.out.println("inside addReservation() if 2");
 
        try{
            return  new ResponseEntity<>(XML.toString(convertReservationtoJSON(reservation)),HttpStatus.OK);
@@ -394,8 +393,8 @@ public class ReservationService {
     private ResponseEntity<?> getReservation(List<Reservation> searchReservationList) throws JSONException {
 
         if(searchReservationList.size() == 0 || searchReservationList == null  ){
-            return new ResponseEntity<>(getErrorMessage("BadRequest", "200",
-                    "Sorry, the requested search criteria doesn't return any reservations." ), HttpStatus.OK);
+            return new ResponseEntity<>(getErrorMessage("BadRequest", "404",
+                    "Sorry, the requested search criteria doesn't return any reservations." ), HttpStatus.NOT_FOUND);
         }
         String allReservations = "";
         for(Reservation reservation : searchReservationList){

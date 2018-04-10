@@ -42,7 +42,7 @@ public class PassengerService {
         JSONObject innerJSON = new JSONObject();
         if(existingPassenger != null){
             System.out.println("Passenger already exists!");
-            return new ResponseEntity<>(getErrorMessage("BadRequest", "404", "The Passenger Already Exists" ),HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(getErrorMessage("BadRequest", "400", "The Passenger Already Exists" ),HttpStatus.BAD_REQUEST);
         }
         else{
             System.out.println("Passenger Record is being entered");
@@ -79,8 +79,8 @@ public class PassengerService {
             try {
                 Passenger PassengerToBeUpdated = passengerRepository.findByPhone(phone);
                 if (PassengerToBeUpdated != null && PassengerToBeUpdated.getPassengerNumber() != Integer.parseInt(id))
-                    return new ResponseEntity<>(getErrorMessage("BadRequest", "404", "The passenger with phone number " + PassengerToBeUpdated.getPhone()
-                            + " already exists!"), HttpStatus.NOT_FOUND);
+                    return new ResponseEntity<>(getErrorMessage("BadRequest", "404", "The Phone number of " + PassengerToBeUpdated.getPhone()
+                            + " cannot be updated!"), HttpStatus.NOT_FOUND);
 
                 existingPassenger.setAge(Integer.parseInt(age));
                 existingPassenger.setFirstname(firstname);
@@ -94,13 +94,26 @@ public class PassengerService {
                 innerJSON.put("age", age);
                 innerJSON.put("gender", gender);
                 innerJSON.put("phone", phone);
+                JSONObject passengerArray[] = null;
+                int index = 0;
+                List<Reservation> reservations = existingPassenger.getReservations();
+                passengerArray = new JSONObject[reservations.size()];
+                for(Reservation reservation : reservations){
+                    passengerArray[index++] = reservationToJSONString(reservation);
+                    System.out.println(reservation.getReservationNumber());
+                    System.out.println(reservation.getPrice());
+                }
+                JSONObject reservationsJSON = new JSONObject();
+                reservationsJSON.put("reservation", passengerArray);
+                innerJSON.put("reservations", reservationsJSON);
+
             } catch( Exception e){
                 return new ResponseEntity<>(getErrorMessage("BadRequest", "404", "The requested passenger was not updated" ),HttpStatus.NOT_FOUND);
             }
         }
         else{
 
-            return new ResponseEntity<>(getErrorMessage("BadRequest", "404", "The passenger already exists!"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(getErrorMessage("BadRequest", "404", "The passenger Number does not exist! Please try with valid number."), HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(innerJSON.toString(),HttpStatus.OK);

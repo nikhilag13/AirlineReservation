@@ -214,7 +214,7 @@ public class FlightService {
         }else{
 
                 return  new ResponseEntity<>(getErrorMessage("BadRequest", "404",
-                        "Flight does not exist"),
+                        "Flight "+flightNumber+ " does not exist"),
                         HttpStatus.NOT_FOUND);
         }
     }
