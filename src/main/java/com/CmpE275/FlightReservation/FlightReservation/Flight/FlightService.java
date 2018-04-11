@@ -25,6 +25,25 @@ public class FlightService {
     @Autowired
     private  ReservationRepository reservationRepository;
 
+    /**
+     * Returns an HTTP response entity which is the Flight
+     * details. The Flight details are passed from client and are
+     * persisted into the database.
+     *
+     * @param  flightNumber  flightNumber of the passenger
+     * @param  price price of the passenger
+     * @param  from  origin of the passenger
+     * @param  to to of the passenger
+     * @param  departureTime departureTime of the passenger
+     * @param  arrivalTime  arrivalTime of the passenger
+     * @param  description description of the passenger
+     * @param  capacity  capacity of the passenger
+     * @param  model model of the passenger
+     * @param  manufacturer manufacturer of the passenger
+     * @param  manufacturererYear year of the passenger
+     * @return success code status and the newly created flight details in xml format
+     */
+
     public ResponseEntity<?> addNewFlight(String flightNumber, int price, String from, String to, String departureTime,
                                           String arrivalTime, int capacity, String description, String model, String manufacturer, int manufacturererYear){
 
@@ -65,6 +84,25 @@ public class FlightService {
 
     }
 
+    /**
+     * Returns an HTTP response entity which is the Flight
+     * details. The Flight details are passed from client and are
+     * persisted into the database.
+     *
+     * @param  flightNumber  flightNumber of the flight
+     * @param  price price of the flight
+     * @param  from  origin of the flight
+     * @param  to to of the flight
+     * @param  departure departureTime of the flight
+     * @param  arrival  arrivalTime of the flight
+     * @param  description description of the flight
+     * @param  capacity  capacity of the flight
+     * @param  model model of the flight
+     * @param  manufacturer manufacturer of the flight
+     * @param  manufacturererYear year of the flight
+     * @return success code status and the updated flight details in xml format
+     */
+
     public ResponseEntity<?> updateFlight(String flightNumber, int price, String from, String to, String departure,
                                           String arrival, int capacity, String description, String model, String manufacturer, int manufacturererYear) {
         if (flightNumber == null) {
@@ -104,6 +142,26 @@ public class FlightService {
                     HttpStatus.NOT_FOUND);
         }
     }
+
+    /**
+     * Returns an HTTP response entity which is the Flight
+     * details. The Flight details are passed from client and are
+     * persisted into the database.
+     *
+     * @param  flightNumber  flightNumber of the flight
+     * @param  price price of the flight
+     * @param  from  origin of the flight
+     * @param  to to of the flight
+     * @param  departureDate departureTime of the flight
+     * @param  arrivalDate  arrivalTime of the flight
+     * @param  description description of the flight
+     * @param  capacity  capacity of the flight
+     * @param  model model of the flight
+     * @param  manufacturer manufacturer of the flight
+     * @param  manufacturererYear year of the flight
+     * @return success code status and the modified flight details in xml format
+     */
+
 
     public ResponseEntity<?> modifyFlight(String flightNumber, int price, String from, String to, Date departureDate,
                                           Date arrivalDate, int capacity, String description, String model, String manufacturer, int manufacturererYear){
@@ -165,6 +223,14 @@ public class FlightService {
 
     }
 
+    /**
+     * Returns an boolean value and check if flight timings are overlapping.
+     *
+     * @param  passengerFlights  list of passenger flights
+     * @param  currentFlight  current FlightDeatils
+     * @return true if there is overlap else false
+     */
+
     public Boolean checkforOverlapTime(List<Flight> passengerFlights, Flight currentFlight){
         Boolean overlap = false;
         for(Flight f: passengerFlights){
@@ -178,6 +244,15 @@ public class FlightService {
         }
         return overlap;
     }
+
+    /**
+     * Returns a generated Response HTTP Message.
+     *
+     * @param  header  header
+     * @param  code  code
+     * @param message message
+     * @return composes a HTTP Response message and returns the same
+     */
 
     public String getErrorMessage(String header, String code, String message){
         JSONObject errorMessage = new JSONObject();
@@ -194,6 +269,13 @@ public class FlightService {
 
 
     }
+
+    /**
+     * Gets the Flight. The Flight ID is passed from client
+     *
+     * @param  flightNumber  flightNumber of the flight
+     * @return returns the flight details based on the xml value
+     */
 
     public ResponseEntity<?> getFlightResponse(String flightNumber,Boolean xml){
         Flight flight = flightRepository.findByFlightNumber(flightNumber);
@@ -218,6 +300,13 @@ public class FlightService {
                         HttpStatus.NOT_FOUND);
         }
     }
+
+    /**
+     * Deletes the Flight. The Flight ID is passed from client
+     *
+     * @param  flightNumber  flightNumber of the flight
+     * @return success as HTTP rESPONSE  if the flight is deleted
+     */
 
     public ResponseEntity<?> deleteFlight(String flightNumber){
         Flight f = flightRepository.findByFlightNumber(flightNumber);
@@ -256,6 +345,13 @@ public class FlightService {
         }
 
     }
+
+    /**
+     * Converts the Flight Object to JSON
+     *
+     * @param  f  flight object
+     * @return JSON object of flight object
+     */
 
     public JSONObject convertFlightToJSON(Flight f){
         JSONObject res = new JSONObject();
@@ -297,7 +393,12 @@ public class FlightService {
       return res;
 
     }
-
+    /**
+     * Converts the Plane Object to JSON
+     *
+     * @param  p  plane object
+     * @return JSON object of plane object
+     */
     public JSONObject convertPassengerToJSON(Passenger p){
         JSONObject res = new JSONObject();
 
