@@ -240,7 +240,6 @@ public class ReservationService {
         }
         for(int i=0;i<flights.size();i++){
             for(int j=0;j<passengerFlights.size();j++){
-
                 Date flightDepartureDate=flights.get(i).getDepartureTime();
                 Date flightArrivalDate=flights.get(i).getArrivalTime();
                 Date dep=passengerFlights.get(j).getDepartureTime();
@@ -298,15 +297,42 @@ public class ReservationService {
         List<Flight> flights = new ArrayList<>();
         List<Flight> holder = new ArrayList<>();
 
-        if(passengerId != -100){
+        if(passengerId != -1){
+            //Then a valid passenger number
             isPassengerFound = true;
             passenger = passengerRepository.findByPassengerNumber(passengerId);
-
+            //check if the passenger exists
             if(passenger != null){
+                //get the reservations
                 reservations = passenger.getReservations();
             }
         }
+        if(!flightNumber.equals("flightNumber")) {
 
+            if((isSourceFound || isDestinationFound || isPassengerFound) && reservations.size() == 0 ){
+                for(Reservation reservation : reservations){
+                    flights = reservation.getFlights();
+                    for(Flight flight : flights){
+                        if(!flight.getFlightNumber().equals(flightNumber)){
+                            holder.add(flight);
+                        }
+                    }
+                    for(Flight flight2 : holder){
+                        flights.remove(flight2);
+                    }
+                    //If the flights size is 0
+                    if(flights.size() == 0){
+                        reservations.remove(reservation);
+                    }
+
+                }
+            }
+            else{
+                List<Flight> AllTheFlights = (List<Flight>) flightRepository.findAll();
+                List<Flight> newTempFlightHolder = new ArrayList<>();
+                getStuffDone(toDestination, AllTheFlights ,newTempFlightHolder, reservations );
+            }
+        }
         if(!fromSource.equals("from")) {
 
             if(isPassengerFound){
@@ -359,32 +385,6 @@ public class ReservationService {
                 getStuffDone(toDestination, AllTheFlights ,newTempFlightHolder, reservations );
             }
             isDestinationFound = true;
-        }
-        if(!flightNumber.equals("flightNumber")) {
-
-            if((isSourceFound || isDestinationFound || isPassengerFound) && reservations.size() == 0 ){
-                for(Reservation reservation : reservations){
-                    flights = reservation.getFlights();
-                    for(Flight flight : flights){
-                        if(!flight.getFlightNumber().equals(flightNumber)){
-                            holder.add(flight);
-                        }
-
-                    }
-                    for(Flight flight2 : holder){
-                        flights.remove(flight2);
-                    }
-                    if(flights.size() == 0){
-                        reservations.remove(reservation);
-                    }
-
-                }
-            }
-            else{
-                List<Flight> AllTheFlights = (List<Flight>) flightRepository.findAll();
-                List<Flight> newTempFlightHolder = new ArrayList<>();
-                getStuffDone(toDestination, AllTheFlights ,newTempFlightHolder, reservations );
-            }
         }
 
         return getReservation(reservations);
