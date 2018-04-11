@@ -35,6 +35,18 @@ public class PassengerService {
         return passengerRepository.findAll();
     }
 
+    /**
+     * Returns an HTTP response entity which is the passenger
+     * details. The passenger details are passed from client and are
+     * persisted into the database.
+     *
+     * @param  firstname  firstname of the passenger
+     * @param  lastname lastname of the passenger
+     * @param  age age of the passenger
+     * @param  gender gender of the passenger
+     * @param  phone phone of the passenger
+     * @return code status and the newly created passenger details in JSON format or error message
+     */
     public ResponseEntity<?> addPassenger(String firstname, String lastname, String age, String gender, String phone) {
 
         Passenger existingPassenger = passengerRepository.findByPhone(phone);
@@ -70,6 +82,19 @@ public class PassengerService {
         }
 
     }
+
+    /**
+     * Returns an HTTP response entity which is the passenger
+     * details. The passenger details are passed from client and are
+     * updated and persisted into the database.
+     *
+     * @param  firstname  firstname of the passenger
+     * @param  lastname lastname of the passenger
+     * @param  age age of the passenger
+     * @param  gender gender of the passenger
+     * @param  phone phone of the passenger
+     * @return code status and the updated passenger details in JSON format or error message
+     */
     public ResponseEntity<?> updatePassenger(String id, String firstname,String lastname, String age, String gender, String phone) {
 
         Passenger existingPassenger = passengerRepository.findByPassengerNumber(Integer.parseInt(id));
@@ -119,8 +144,14 @@ public class PassengerService {
         return new ResponseEntity<>(innerJSON.toString(),HttpStatus.OK);
     }
 
+    /**
+     * Deletes the passenger data from the database
+     * passenger id is passed from the client
+     *
+     * @param  id  Unique id of the passenger
+     * @return  code status and the confirmation or error message
+     */
     public ResponseEntity<?> deletePassenger(String id) {
-
 
         Passenger existingPassenger = passengerRepository.findByPassengerNumber(Integer.parseInt(id));
         if(existingPassenger == null){
@@ -145,6 +176,15 @@ public class PassengerService {
         return new ResponseEntity<>(getErrorMessage("Response", "200", "Passenger with id " + id + " is deleted successfully"),HttpStatus.OK);
     }
 
+    /**
+     * If any error occurs in the processing of the request
+     * an error message is sent in the form of JSON response
+     *
+     * @param  header  header of the http request
+     * @param  code  code status in the http request
+     * @param  message  message of the http request
+     * @return  error message object
+     */
     public String getErrorMessage(String header, String code, String message){
         JSONObject errorMessage = new JSONObject();
         JSONObject errorCodeandMesaage =  new JSONObject();
@@ -159,6 +199,14 @@ public class PassengerService {
         return errorMessage.toString();
     }
 
+    /**
+     * Retrives the details of the passenger
+     * based on the unique id. If no valid passenger id is passed,
+     * returns an error msg.
+     *
+     * @param  id  Unique id of the passenger
+     * @return  code status and the passenger entity or error message
+     */
     public ResponseEntity<?> getPassenger(String id, boolean isJson) throws JSONException {
         System.out.println("getPassenger()"+isJson);
         Passenger passenger = passengerRepository.findByPassengerNumber(Integer.parseInt(id));
@@ -179,7 +227,14 @@ public class PassengerService {
         }
     }
 
-
+    /**
+     * Converts the passenger details retrieved from the
+     * repository and convert into JSON Object for the
+     * request
+     *
+     * @param  passenger  Passenger Object
+     * @return  passenger JSON Object to be sent
+     */
     public JSONObject ConvertPassengerToJSONString(Passenger passenger){
         JSONObject result = new JSONObject();
         JSONObject fields = new JSONObject();
@@ -213,6 +268,15 @@ public class PassengerService {
         return result;
     }
 
+
+    /**
+     * Converts the reservation details retrieved from the
+     * repository and convert into JSON Object for the
+     * request
+     *
+     * @param  reservation  reservation Object
+     * @return  reservation JSON Object to be sent
+     */
     public JSONObject reservationToJSONString(Reservation reservation){
 
         JSONObject reservationToJSONString = new JSONObject();
@@ -237,6 +301,14 @@ public class PassengerService {
         return reservationToJSONString;
     }
 
+    /**
+     * Converts the flight details retrieved from the
+     * repository and convert into JSON Object for the
+     * request
+     *
+     * @param  flight  flight Object
+     * @return  flight JSON Object to be sent
+     */
     public JSONObject flightToJSONString(Flight flight){
         JSONObject flightToJSONString = new JSONObject();
         JSONObject flightJSON = new JSONObject();
@@ -257,7 +329,14 @@ public class PassengerService {
         return flightToJSONString;
     }
 
-
+    /**
+     * Converts the plane details retrieved from the
+     * repository and convert into JSON Object for the
+     * request
+     *
+     * @param  plane  plane Object
+     * @return  plane JSON Object to be sent
+     */
     public JSONObject planeToJSONString(Plane plane){
         JSONObject planeJSON = new JSONObject();
         try {

@@ -31,6 +31,15 @@ public class ReservationService {
     @Autowired
     PassengerRepository passengerRepository;
 
+
+    /**
+     * Returns an HTTP response entity which is the reservation
+     * details. The reservation id is passed from client and are
+     * retrived and sent to the client
+     *
+     * @param  number  reservation number
+     * @return code status and the reservation details in JSON format or error message
+     */
     public ResponseEntity<?> getReservation(int number){
         Reservation reservation = reservationRepository.findByReservationNumber(number);
         if(reservation==null){
@@ -43,6 +52,15 @@ public class ReservationService {
 
     }
 
+    /**
+     * If any error occurs in the processing of the request
+     * an error message is sent in the form of JSON response
+     *
+     * @param  header  header of the http request
+     * @param  code  code status in the http request
+     * @param  message  message of the http request
+     * @return  error message object
+     */
     public String getErrorMessage(String header, String code, String message){
         JSONObject errorMessage = new JSONObject();
         JSONObject codeandMesaage =  new JSONObject();
@@ -56,6 +74,14 @@ public class ReservationService {
         return errorMessage.toString();
     }
 
+    /**
+     * Converts the reservation details retrieved from the
+     * repository and convert into JSON Object for the
+     * request
+     *
+     * @param  reservation  reservation Object
+     * @return  reservation JSON Object to be sent
+     */
     public JSONObject convertReservationtoJSON(Reservation reservation){
         JSONObject result  =  new JSONObject();
         JSONObject res = new JSONObject();
@@ -91,6 +117,14 @@ public class ReservationService {
       return result;
     }
 
+    /**
+     * Converts the flight details retrieved from the
+     * repository and convert into JSON Object for the
+     * request
+     *
+     * @param  flight  flight Object
+     * @return  flight JSON Object to be sent
+     */
     public JSONObject convertFlightToJSON(Flight flight){
         JSONObject jsonflight = new JSONObject();
         System.out.println("inside flightToJSONString()");
@@ -112,6 +146,14 @@ public class ReservationService {
         return jsonflight;
     }
 
+    /**
+     * Converts the plane details retrieved from the
+     * repository and convert into JSON Object for the
+     * request
+     *
+     * @param  plane  plane Object
+     * @return  plane JSON Object to be sent
+     */
     public JSONObject convertPlaneToJSON(Plane plane){
         JSONObject jsonPlane = new JSONObject();
 
@@ -126,6 +168,13 @@ public class ReservationService {
         return jsonPlane;
     }
 
+    /**
+     * Deletes the reservation data from the database
+     * reservation id is passed from the client
+     *
+     * @param  number  Unique id of the reservation
+     * @return  code status and the confirmation or error message
+     */
     public ResponseEntity<?> deleteReservation(int number){
         Reservation reservation = reservationRepository.findByReservationNumber(number);
         if(reservation==null){
@@ -152,6 +201,15 @@ public class ReservationService {
 
     }
 
+    /**
+     * Returns an HTTP response entity which is the reservation
+     * details. The reservation details are passed from client and are
+     * persisted into the database.
+     *
+     * @param  passengerNumber  passengerId of the passenger
+     * @param  flights flight Lists of the passenger
+     * @return code status and the newly created reservation details or error message
+     */
     public ResponseEntity<?> makeReservation(int passengerNumber,List<Flight> flights ){
 
         Passenger passenger = passengerRepository.findByPassengerNumber(passengerNumber);
@@ -210,6 +268,13 @@ public class ReservationService {
 
     }
 
+    /**
+     * Chceks whether the flights in a reservation
+     * overlap or not.
+     *
+     * @param  flights flight Lists of the passenger
+     * @return result which is the boolean whether flight timings overlap
+     */
     private Boolean checkIfFlightTimingsOverlap( List<Flight> flights) {
         Boolean result = false;
         for(int i=0;i<flights.size();i++){
@@ -229,6 +294,13 @@ public class ReservationService {
 
     }
 
+    /**
+     * Chceks whether the other flights in a reservation
+     * of the passenger overlap or not.
+     *
+     * @param  flights flight Lists of the passenger
+     * @return result which is the boolean whether flight timings overlap
+     */
     private Boolean checkIfPassengerOtherFlightsOverlap(int passengerNumber, List<Flight> flights){
        Boolean result = false;
         List<Reservation> reservations=passengerRepository.findByPassengerNumber(passengerNumber).getReservations();
@@ -253,6 +325,16 @@ public class ReservationService {
         return result;
     }
 
+    /**
+     * A support method which takes care of the reservations
+     * based on the various parameters passed.
+     *
+     * @param  ToOrFromPlace flight Lists of the passenger
+     * @param  flightsList  header of the http request
+     * @param  newTempList  code status in the http request
+     * @param  reservations  message of the http request
+
+     */
     public void getStuffDone(String ToOrFromPlace, List<Flight> flightsList, List<Flight> newTempList,List<Reservation> reservations ){
 
         for(int flightIndex=0;flightIndex<flightsList.size();flightIndex++){
@@ -287,7 +369,17 @@ public class ReservationService {
         }
     }
 
-
+    /**
+     * Returns an HTTP response entity which is the passenger
+     * details. The passenger details are passed from client and are
+     * persisted into the database.
+     *
+     * @param  passengerId  passengerId of the passenger
+     * @param  fromSource origin of the flights
+     * @param  toDestination to of the flights
+     * @param  flightNumber gender of the flight Number
+     * @return  reservations -code status and the serach criteria details or error message
+     */
     public ResponseEntity<?> searchReservation(int passengerId, String fromSource,String toDestination,String flightNumber) throws JSONException {
 
         boolean isPassengerFound = false, isSourceFound = false, isDestinationFound = false;
@@ -390,6 +482,13 @@ public class ReservationService {
         return getReservation(reservations);
     }
 
+    /**
+     * Returns an HTTP response entity which is the reservation
+     * details.
+     *
+     * @param  searchReservationList  reservation list
+     * @return code status and the reservation details in JSON format or error message
+     */
     private ResponseEntity<?> getReservation(List<Reservation> searchReservationList) throws JSONException {
 
         if(searchReservationList.size() == 0 || searchReservationList == null  ){
@@ -434,7 +533,14 @@ public class ReservationService {
         return  new ResponseEntity<>(XML.toString(new JSONObject(allReservations)), HttpStatus.OK);
     }
 
-
+    /**
+     * Converts the flight details retrieved from the
+     * repository and convert into JSON Object for the
+     * request
+     *
+     * @param  flight  flight Object
+     * @return  flight JSON Object to be sent
+     */
     public JSONObject flightToJSONString(Flight flight){
         JSONObject flightJSON = new JSONObject();
         try {
@@ -453,6 +559,14 @@ public class ReservationService {
         return flightJSON;
     }
 
+    /**
+     * Converts the plane details retrieved from the
+     * repository and convert into JSON Object for the
+     * request
+     *
+     * @param  plane  plane Object
+     * @return  plane JSON Object to be sent
+     */
     public JSONObject ConvertPlaneToJSON(Plane plane){
         JSONObject planeJSON = new JSONObject();
         try {
@@ -466,6 +580,16 @@ public class ReservationService {
         return planeJSON;
     }
 
+    /**
+     * Returns an HTTP response entity which is the reservation
+     * details. The reservation details are passed from client and are
+     * updated and persisted into the database.
+     *
+     * @param  reservationNumber  reservation Number of the reservation
+     * @param  flightsToAdd Flights to be added
+     * @param  flightsToRemove Flights to be removed
+     * @return code status and the updated reservation details or error message
+     */
     public ResponseEntity<?> updateReservation(int reservationNumber,List<Flight> flightsToAdd,List<Flight> flightsToRemove) throws JSONException {
         try{
         //First Remove the FLights

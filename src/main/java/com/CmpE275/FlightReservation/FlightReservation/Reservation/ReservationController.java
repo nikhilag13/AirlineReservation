@@ -15,6 +15,14 @@ public class ReservationController {
     @Autowired
     ReservationService reservationService;
 
+    /**
+     * Returns an HTTP response entity which is the reservation
+     * details. The reservation id is passed from client and are
+     * retrived and sent to the client
+     *
+     * @param  number  reservation number
+     * @return code status and the reservation details in JSON format or error message
+     */
     @RequestMapping(value="/reservation/{number}", method= RequestMethod.GET)
     public ResponseEntity<?> getReservation(
             @PathVariable int number) {
@@ -22,6 +30,13 @@ public class ReservationController {
         return reservationService.getReservation(number);
     }
 
+    /**
+     * Deletes the reservation data from the database
+     * reservation id is passed from the client
+     *
+     * @param  number  Unique id of the reservation
+     * @return  code status and the confirmation or error message
+     */
     @RequestMapping(value="/reservation/{number}", method=RequestMethod.DELETE)
     public ResponseEntity<?> deleteReservation(
             @PathVariable int number) {
@@ -29,6 +44,15 @@ public class ReservationController {
         return reservationService.deleteReservation(number);
     }
 
+    /**
+     * Returns an HTTP response entity which is the reservation
+     * details. The reservation details are passed from client and are
+     * persisted into the database.
+     *
+     * @param  passengerId  passengerId of the passenger
+     * @param  flightLists flight Lists of the passenger
+     * @return code status and the newly created reservation details or error message
+     */
     @RequestMapping(value="/reservation", method=RequestMethod.POST)
     public ResponseEntity<?> makeReservation(
             @RequestParam int passengerId,
@@ -38,7 +62,17 @@ public class ReservationController {
         return reservationService.makeReservation(passengerId, flightLists);
     }
 
-
+    /**
+     * Returns an HTTP response entity which is the passenger
+     * details. The passenger details are passed from client and are
+     * persisted into the database.
+     *
+     * @param  passengerId  passengerId of the passenger
+     * @param  origin origin of the flights
+     * @param  to to of the flights
+     * @param  flightNumber gender of the flight Number
+     * @return code status and the serach criteria details or error message
+     */
     @RequestMapping(value="/reservation", method= RequestMethod.GET)
     public ResponseEntity<?> searchReservation(
             @RequestParam int passengerId,
@@ -50,6 +84,16 @@ public class ReservationController {
         return reservationService.searchReservation(passengerId,origin,to,flightNumber);
     }
 
+    /**
+     * Returns an HTTP response entity which is the reservation
+     * details. The reservation details are passed from client and are
+     * updated and persisted into the database.
+     *
+     * @param  reservationNumber  reservation Number of the reservation
+     * @param  flightsToAdd Flights to be added
+     * @param  flightsToRemove Flights to be removed
+     * @return code status and the updated reservation details or error message
+     */
     @RequestMapping(value="/reservation/{reservationNumber}", method=RequestMethod.POST)
     public ResponseEntity<?> updateReservation(
             @PathVariable int reservationNumber,
